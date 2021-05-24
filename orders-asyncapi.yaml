@@ -1,0 +1,45 @@
+asyncapi: 2.0.0
+
+info:
+  title: Order Service PoC API
+  version: 1.0.0
+  description: |
+    This API is a PoC that demos the description and definition of an API for
+    an event-based communication interface
+
+servers:
+  development:
+    #url: mqtt://test.mosquitto.org
+    #protocol: mqtt
+    url: 127.0.0.1
+    protocol: amqp
+    description: A dev message broker hosted locally
+    variables:
+      port:
+        description: a non-secure connection
+        default: "5672"
+
+defaultContentType: application/json
+
+channels:
+  com.demo.orders.initiate_order_fulfillment:
+    publish:
+      summary: >
+        This is a message to an order system.
+        It initiates an order fulfillment process.
+      message:
+        $ref: "#/components/messages/initiateOrder"
+
+components:
+  messages:
+    initiateOrder:
+      payload:
+        $ref: "#/components/schemas/NewOrder"
+  schemas:
+    NewOrder:
+      type: object
+      properties:
+        id:
+          type: string
+        spec:
+          type: string
