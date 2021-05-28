@@ -1,0 +1,58 @@
+@startuml
+
+title High-Level Search Concept
+
+scale 750 width
+skinparam packageStyle rect
+skinparam componentStyle uml2
+
+skinparam database {
+    BackgroundColor    #6A9EFF
+}
+
+skinparam usecase {
+    BackgroundColor    #6A9EFF
+    BorderColor        black
+}
+
+skinparam component {
+    FontColor          black
+    AttributeFontColor black
+    FontSize           17
+    AttributeFontSize  15
+    AttributeFontname  Droid Sans Mono
+    BackgroundColor    #6A9EFF
+    BorderColor        black
+    ArrowColor         #222266
+}
+
+
+database  rdb [DB
+]
+
+usecase (Sychronisation/Mapping) as syncmap
+
+Rectangle "SM Service"{
+  (Service) <-right- (ORM) : Relational \n queries
+  (Service) -right-> (ORM) : Create, update\n commands
+}
+
+database  searchDB [Search\nEngine
+]
+
+
+(ORM) -right-> rdb
+
+rdb -down-> (syncmap)
+
+(syncmap) -down-> searchDB
+
+(Service) <-right- searchDB : Full-text queries
+
+
+
+
+Note left of searchDB: Alternatives include: \n - Elasticsearch Instance \n - Solr Instance \n - Custom solution based on Lucene
+
+
+@enduml
